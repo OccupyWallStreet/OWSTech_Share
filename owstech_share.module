@@ -4,7 +4,8 @@
  * @file
  * General trackerless share plugin for Drupal
  * Currently only supports facebook, twitter, gplus, and reddit, this can grow rather easily.
- * @todo make sure the appropriate metadata is showing up in the document for previews/descriptions and fancy titles, consider integration with page_title module.
+ * For facebook preview information one must populate the open-graph title, description and image fields, 
+ * The meta_data module can supply those http://drupal.org/project/metatag
  */
 
 /**
@@ -194,9 +195,7 @@ function template_preprocess_owstech_share( &$variables ) {
     "@page_title@" => $node->title,
   );
 
-/* @todo, move the "entrynames's entry in the occupy directory" text to a variable with token integration in the control panel */
-/* @todo take out hardlink to dev.directory, beeing used for testing */
-  $current_path = 'http://dev.directory.occupy.net' . '/' . drupal_get_path_alias( current_path(), $language->language );
+  $current_path = $base_url . '/' . drupal_get_path_alias( current_path(), $language->language );
 
   $variables['node_title'] = $node->title;
   $variables['owstech_share_actuator_text'] = variable_get('owstech_share_actuator_text');
