@@ -41,9 +41,6 @@ function owstech_share_menu() {
  */
 function owstech_share_admin_form( $form, &$form_state ) {
 
-  dpm( variable_get('owstech_share_include_reddit' ) );
-  dpm( variable_get('owstech_share_reddit_title' ) );
-
   /* Setup groups */
   $form['general'] = array(
     '#type' => 'fieldset',
@@ -205,12 +202,7 @@ function template_preprocess_owstech_share( &$variables ) {
   $variables['owstech_share_include_reddit'] = variable_get('owstech_share_include_reddit');
 
   $variables['owstech_share_tweet_text'] = token_replace( variable_get('owstech_share_tweet_text'), array( 'node' => $node ) );
-  $variables['owstech_share_reddit_title'] = token_replace( variable_get('owstech_share_reddit_title'), array( 'node' => $node ) );
-
-  dpm( $variables['owstech_share_tweet_text'] );
-  dpm( $variables['owstech_share_reddit_title'] );
-  dpm( $variables['owstech_share_include_reddit'] );
-  
+  $variables['owstech_share_reddit_title'] = token_replace( variable_get('owstech_share_reddit_title'), array( 'node' => $node ) );  
 
   if ( $variables['owstech_share_include_facebook'] ) {
     $variables['share_cta_fb'] = t( "Share @page_title@ on Facebook", $t_vars );
