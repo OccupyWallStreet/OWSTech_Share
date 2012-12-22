@@ -6,6 +6,8 @@
 .owstech-share .actuator {
 	margin: 0;
 	float: left;
+	position: relative;
+	z-index: 2;
 	background: #000;
 }
 
@@ -23,19 +25,12 @@
 	color: #000;
 }
 
-
-.something{
-}
-
-
 .owstech-share div.drawer {
 	display: inline-block;
 	padding: .125em .125em 0 .125em;
-	z-index: -1;
+	z-index: 1;
 	white-space: nowrap;
 	opacity: 0;
-	position: relative;
-	left: -5em;
 	-webkit-transition: all 450ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
 	-moz-transition: all 450ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
 	-ms-transition: all 450ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
@@ -58,19 +53,24 @@
 .owstech-share ul li {
 	display: inline-block;
 	margin-right: 1px;
-	padding-top: .325em;
+	padding: .325em 0;
 	box-shadow: 0px 1px 250px #000;
 }
 
 .owstech-share ul li a {
 	display: block;
-	text-indent: -5000px;
-	overflow: hidden;
+	text-indent: -3000px;
+	width: 16px;
+	height: 16px;
+}
+
+.owstech-share ul li a,
+.owstech-share ul li a:visited,
+.owstech-share ul li a:active {
+	outline: none;
 }
 
 .owstech-share a.icon {
-	width: 16px;
-	height: 16px;
 	opacity: .6;
 }
 
@@ -84,13 +84,13 @@
 }
 
 .owstech-share a.icon.twitter{
-	background: url( ../images/owstech_share_sprite_16.png ) 16px 0;
+	background: url( ../images/owstech_share_sprite_16.png ) -16px 0px;
 }
 
 .owstech-share a.icon.google-plus{
-	background: url( ../images/owstech_share_sprite_16.png ) 48px 0;
+	background: url( ../images/owstech_share_sprite_16.png ) -48px 0 no-repeat;
 }
 
 .owstech-share a.icon.reddit{
-	background: url( ../images/owstech_share_sprite_16.png ) 32px 0;
+	background: url( ../images/owstech_share_sprite_16.png ) -32px 0 no-repeat;
 }

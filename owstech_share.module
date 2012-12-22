@@ -39,37 +39,98 @@ function owstech_share_menu() {
  * Form builder: Build the settings form for this module.
  */
 function owstech_share_admin_form( $form, &$form_state ) {
-  $form['owstech_share_actuator_text'] = array(
+
+  dpm( variable_get('owstech_share_include_reddit' ) );
+  dpm( variable_get('owstech_share_reddit_title' ) );
+
+  /* Setup groups */
+  $form['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General'),
+    '#tree' => FALSE,
+    '#weight' => 0,
+  );
+
+  $form['facebook_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Facebook settings'),
+    '#tree' => FALSE,
+    '#weight' => 1,
+  );
+
+  $form['twitter_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Twitter settings'),
+    '#tree' => FALSE,
+    '#weight' => 2,
+  );
+
+  $form['googleplus_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Google+ settings'),
+    '#tree' => FALSE,
+    '#weight' => 3,
+  );
+
+  $form['reddit_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Reddit settings'),
+    '#tree' => FALSE,
+    '#weight' => 4,
+  );
+
+  /* Fields */
+  $form['general']['owstech_share_actuator_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Share widget label'),
-    '#default_value' => t('Share +'),
+    '#default_value' => variable_get( 'owstech_share_actuator_text', t('Share +') ),
     '#description' => t('What to label the share widget actuator.'),
   );
-  $form['owstech_share_include_facebook'] = array(
+
+  $form['facebook_fields']['owstech_share_include_facebook'] = array(
     '#type' => 'checkbox',
     '#title' => t('Facebook'),
-    '#default_value' => TRUE,
+    '#default_value' => variable_get( 'owstech_share_include_facebook', TRUE ),
     '#description' => t('Include Facebook as a share point.'),
   );
-  $form['owstech_share_include_twitter'] = array(
+
+  $form['twitter_fields']['owstech_share_include_twitter'] = array(
     '#type' => 'checkbox',
     '#title' => t('Twitter'),
     '#description' => t('Include Twitter as a share point.'),
-    '#default_value' => TRUE, //riable_get( 'owstech_share_include_twitter', true ),
+    '#default_value' => variable_get( 'owstech_share_include_twitter', TRUE ),
   );
-  $form['owstech_share_include_googleplus'] = array(
+
+  $form['twitter_fields']['owstech_share_tweet_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tweet text'),
+    '#default_value' => variable_get( 'owstech_share_tweet_text', t('[node:title]' ) ),
+  );
+
+  $form['googleplus_fields']['owstech_share_include_googleplus'] = array(
     '#type' => 'checkbox',
     '#title' => t('Google +'),
     '#description' => t('Include Google + as a share point.'),
-    '#default_value' => TRUE, //variable_get( 'owstech_share_include_googleplus', true ),
+    '#default_value' => variable_get( 'owstech_share_include_googleplus', TRUE ),
   );
-  $form['owstech_share_include_reddit'] = array(
+
+  $form['reddit_fields']['owstech_share_include_reddit'] = array(
     '#type' => 'checkbox',
     '#title' => t('Reddit'),
     '#description' => t('Include Reddit as a share point.'),
-    '#default_value' => TRUE, //variable_get( 'owstech_share_include_reddit', true ),
+    '#default_value' => variable_get('owstech_share_include_reddit', TRUE), 
   );
+
+  $form['reddit_fields']['owstech_share_reddit_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Reddit entry title'),
+    '#description' => t('Title for Reddit share box.'),
+    '#default_value' => variable_get( 'owstech_share_reddit_title', t('[node:title]' ) ),
+  );
+
+
   return system_settings_form( $form );
+
 }
 
 
@@ -111,7 +172,6 @@ function owstech_share_theme() {
   $theme = array();
   $theme['owstech_share'] = array(
     'template' => 'owstech-share-drawer',
-    'variables' => array(),
     'path' => drupal_get_path('module', 'owstech_share') . '/templates/',
   );
   return $theme;
@@ -131,33 +191,42 @@ function template_preprocess_owstech_share( &$variables ) {
   $nid = $node->nid;
 
   $t_vars = array(
-    "@page_title" => $variables['node_title'],
+    "@page_title@" => $node->title,
   );
 
-  $current_path = $base_url . '/' . drupal_get_path_alias( current_path(), $language->language );
+/* @todo, move the "entrynames's entry in the occupy directory" text to a variable with token integration in the control panel */
+/* @todo take out hardlink to dev.directory, beeing used for testing */
+  $current_path = 'http://dev.directory.occupy.net' . '/' . drupal_get_path_alias( current_path(), $language->language );
 
   $variables['node_title'] = $node->title;
   $variables['owstech_share_actuator_text'] = variable_get('owstech_share_actuator_text');
-  $variables['fb'] = variable_get('owstech_share_include_facebook');
-  $variables['twitter'] = variable_get('owstech_share_include_twitter');
-  $variables['googleplus'] = variable_get('owstech_share_include_googleplus');
-  $variables['reddit'] = variable_get('owstech_share_include_reddit');
+  $variables['owstech_share_include_facebook'] = variable_get('owstech_share_include_facebook');
+  $variables['owstech_share_include_twitter'] = variable_get('owstech_share_include_twitter');
+  $variables['owstech_share_include_googleplus'] = variable_get('owstech_share_include_googleplus');
+  $variables['owstech_share_include_reddit'] = variable_get('owstech_share_include_reddit');
 
-  if ( $variables['fb'] ) {
-    $variables['share_cta_fb'] = t( "Share @page_title on Facebook", $t_vars );
+  $variables['owstech_share_tweet_text'] = token_replace( variable_get('owstech_share_tweet_text'), array( 'node' => $node ) );
+  $variables['owstech_share_reddit_title'] = token_replace( variable_get('owstech_share_reddit_title'), array( 'node' => $node ) );
+
+  dpm( $variables['owstech_share_tweet_text'] );
+  dpm( $variables['owstech_share_reddit_title'] );
+  dpm( $variables['owstech_share_include_reddit'] );
+  
+
+  if ( $variables['owstech_share_include_facebook'] ) {
+    $variables['share_cta_fb'] = t( "Share @page_title@ on Facebook", $t_vars );
     $variables['share_url_fb'] = 'http://www.facebook.com/share.php?u=' . $current_path;
   }
-  if ( $variables['twitter']) {
-    $variables['share_cta_twitter'] = t( "Tweet @page_title!", $t_vars );
-    $variables['share_url_twitter'] = 'http://twitter.com/home?status=' . $current_path . '%20' . drupal_encode_path( $node->title );
+  if ( $variables['owstech_share_include_twitter']) {
+    $variables['share_cta_twitter'] = t( "Tweet @page_title@!", $t_vars );
+    $variables['share_url_twitter'] = 'http://twitter.com/intent/tweet?url=' . drupal_encode_path( $current_path ) . '&text=' . $variables['owstech_share_tweet_text'];
   }
-  if ( $variables['googleplus'] ) {
-    $variables['share_cta_googleplus'] = t( "Share @page_title on Google +", $t_vars );
+  if ( $variables['owstech_share_include_googleplus'] ) {
+    $variables['share_cta_googleplus'] = t( "Share @page_title@ on Google +", $t_vars );
     $variables['share_url_googleplus'] = 'https://plus.google.com/share?url=' . $current_path;
   }
-  if ( $variables['reddit'] ) {
-    $variables['share_cta_reddit'] = t( "Reddit @page_title!", $t_vars );
-    $variables['share_url_reddit'] = 'http://www.reddit.com/submit?url=' . $current_path;
+  if ( $variables['owstech_share_include_reddit'] ) {
+    $variables['share_cta_reddit'] = t( "Reddit @page_title@!", $t_vars );
+    $variables['share_url_reddit'] = 'http://www.reddit.com/submit?url=' . $current_path . "&title=" . $variables['owstech_share_reddit_title'];
   }
-
 }
