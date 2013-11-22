@@ -9,10 +9,11 @@ Why use this?
 1. When you access a page with social media like buttons, using the widgets provided by the various sites, the corresponding service can track your browsing.
 This module does not. It simply builds URLS to take you to the proper location.
 Think of it as an opt-in for facebook and twitter's knowing where you are while not using their services directly.
-2. Supports facebook, twitter, google plus, and reddit.
-3. Its html5 and has minimal markup.
-4. It's already built!
-5. It can easily be extended to work with other services (contact the author about adding services).
+2. Doesn't by default scatter corportate logos alongside your sites, tools, thoughts, and messages.
+3. Supports facebook, twitter, google plus, and reddit.
+4. Its html5 and has minimal markup.
+5. It's already built!
+6. It can easily be extended to work with other services (contact the author about adding services).
 
 What's left to do?
 ==================
