@@ -1,6 +1,6 @@
 Owstech Share
 =============
-A share module with no js tracking, simple-clean html5 markup, and fancy css transitions.
+A Drupal share module with no js tracking, simple-clean html5 markup, and fancy css transitions.
 This was created in support the needs of Occupy affiliated sites to preserve anonimity of its visitors (or not specifically aiding corporations from tracking our visitors browsing behaviors)
 The drawer functionality was an attempt to make this tool functional while not plastering social media corporate logos all over our sites.
 
@@ -19,3 +19,4 @@ What's left to do?
 It would be nice to make it easier for admins to add services at their leisure using a nice UI.
 Improve mobile and touch support.
 Provide a few different styles for presentation.
+Wordpress version.
